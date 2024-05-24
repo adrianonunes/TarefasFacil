@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div id="tarefas">
+            {% for tarefa in tarefas %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ tarefa.Titulo }}</h5>
+                    <p class="card-text"><small>{{ tarefa.Descricao }}</small></p>
+                    <p class="card-text"><small class="text-muted">Status: {{ tarefa.Status }}</small></p>
+                    <p class="card-text"><small class="text-muted">Assumido por: {{ tarefa.QuemAssumiu }}</small></p>
+                    {% if tarefa.Status == 'PENDENTE' %}
+                    <button class="button button-warning em-processo-btn" data-id="{{ tarefa.ID }}">Assumir</button>
+                    {% endif %}
+                    {% if tarefa.Status == 'PROCESSO' %}
+                    <a href="{{ url_for('concluir_tarefa', tarefa_id=tarefa.ID) }}" class="button button-success">Concluir</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Criar Tarefa -->
+<div id="modalCriarTarefa" class="modal">
+  <div class="modal-content">
+      <div class="modal-header">
+          <span class="close" data-dismiss="modal">&times;</span>
+          <h5 class="modal-title">Criar Tarefa</h5>
+      </div>
+      <form action="/criar" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" name="titulo" required>
+          </div>
+          <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" name="descricao" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="nome_do_operador">Nome do Operador</label>
+            <input type="text" id="nome_do_operador" name="nome_do_operador" required>
+          </div>
+          <div class="form-group">
+            <label for="loja">Loja</label>
+            <input type="text" id="loja" name="loja" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button button-secondary" data-dismiss="modal">Fechar</button>
+          <button type="submit" class="button button-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<!-- Modal Em Processo -->
+<div id="modalEmProcesso" class="modal">
+  <div class="modal-content">
+      <div class="modal-header">
+          <span class="close" data-dismiss="modal">&times;</span>
+          <h5 class="modal-title">Assumir Tarefa</h5>
+      </div>
+      <form id="formEmProcesso" action="/em_processo" method="post">
+        <div class="modal-body">
+          <input type="hidden" id="tarefaId" name="tarefa_id">
+          <div class="form-group">
+            <label for="quem_assumiu">Nome do Operador</label>
+            <input type="text" id="quem_assumiu" name="quem_assumiu" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button button-secondary" data-dismiss="modal">Fechar</button>
+          <button type="submit" class="button button-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+</div>
+{% endblock %}
